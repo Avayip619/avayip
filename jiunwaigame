@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色对决：Jiunwai vs Jenson vs Gwen</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        header {
+            margin: 20px 0 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(to right, #ff8a00, #e52e71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: #ffcc00;
+            margin-top: -5px;
+        }
+        
+        .rules {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .rules h2 {
+            color: #ffcc00;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .rules ul {
+            list-style: none;
+            text-align: left;
+            padding: 0 20px;
+        }
+        
+        .rules li {
+            margin: 12px 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .rules li::before {
+            content: "•";
+            color: #ffcc00;
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        
+        .characters {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .character {
+            width: 200px;
+            height: 280px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .character:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .character-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 4px solid white;
+            overflow: hidden;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .character-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .jiunwai .character-img {
+            border-color: #3498db;
+        }
+        
+        .jenson .character-img {
+            border-color: #e74c3c;
+        }
+        
+        .gwen .character-img {
+            border-color: #9b59b6;
+        }
+        
+        .character-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .character-desc {
+            font-size: 1rem;
+            text-align: center;
+            color: #ddd;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .player-choice {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #ffcc00;
+        }
+        
+        .vs-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin: 30px 0;
+        }
+        
+        .player, .computer {
+            width: 200px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 3px dashed rgba(255, 255, 255, 0.4);
+        }
+        
+        .vs-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffcc00;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .result {
+            min-height: 120px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            max-width: 800px;
+            transition: all 0.5s ease;
+        }
+        
+        .result.win {
+            background: rgba(46, 204, 113, 0.3);
+            border-color: #2ecc71;
+            color: #2ecc71;
+            transform: scale(1.05);
+        }
+        
+        .result.lose {
+            background: rgba(231, 76, 60, 0.3);
+            border-color: #e74c3c;
+            color: #e74c3c;
+            transform: scale(1.05);
+        }
+        
+        .result.draw {
+            background: rgba(241, 196, 15, 0.3);
+            border-color: #f1c40f;
+            color: #f1c40f;
+            transform: scale(1.05);
+        }
+        
+        button {
+            background: linear-gradient(to right, #ff8a00, #e52e71);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin: 10px;
+            min-width: 180px;
+        }
+        
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .history {
+            width: 100%;
+            max-width: 800px;
+            margin: 30px auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .history h2 {
+            margin-bottom: 15px;
+            color: #ffcc00;
+        }
+        
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            text-align: left;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        
+        .history-item {
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1rem;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .win-text {
+            color: #2ecc71;
+        }
+        
+        .lose-text {
+            color: #e74c3c;
+        }
+        
+        .draw-text {
+            color: #f1c40f;
+        }
+        
+        .character-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .choice-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .bounce {
+            animation: bounce 0.6s ease;
+        }
+        
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .flash {
+            animation: flash 0.4s ease 2;
+        }
+        
+        .victory-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.5s;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .show-message {
+            opacity: 1;
+        }
+        
+        footer {
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .characters {
+                gap: 15px;
+            }
+            
+            .character {
+                width: 150px;
+                height: 240px;
+            }
+            
+            .character-img {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .vs-area {
+                gap: 20px;
+            }
+            
+            .player, .computer {
+                width: 150px;
+                height: 180px;
+            }
+            
+            .result {
+                font-size: 1.6rem;
+            }
+            
+            .choice-image {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>角色对决游戏</h1>
+            <p class="subtitle">Jiunwai vs Jenson vs Gwen</p>
+        </header>
+        
+        <div class="rules">
+            <h2>游戏规则</h2>
+            <ul>
+                <li><strong>Jiunwai</strong> 可以打败 <strong>Gwen</strong></li>
+                <li><strong>Gwen</strong> 可以打败 <strong>Jenson</strong></li>
+                <li><strong>Jenson</strong> 可以打败 <strong>Jiunwai</strong></li>
+            </ul>
+        </div>
+        
+        <div class="character jiunwai">
+  <div class="character-img">
+    <!-- 修改这里 -->
+    <img id="jiunwai-img" src="C:\Avayip Personal\jiunwai-game\jiunwai.jpg" alt="Jiunwai">
+  </div>
+  <!-- ... -->
+</div>
+
+<div class="character jenson">
+  <div class="character-img">
+    <!-- 修改这里 -->
+    <img id="jenson-img" src="C:\Avayip Personal\jiunwai-game\jenson.jpg" alt="Jenson">
+  </div>
+  <!-- ... -->
+</div>
+
+<div class="character gwen">
+  <div class="character-img">
+    <!-- 修改这里 -->
+    <img id="gwen-img" src="C:\Avayip Personal\jiunwai-game\gwen.jpg" alt="Gwen">
+  </div>
+  <!-- ... -->
+</div>
+        
+        <div class="controls">
+            <button id="jiunwai-btn">选择俊伟</button>
+            <button id="jenson-btn">选择Jenson</button>
+            <button id="gwen-btn">选择Gwen</button>
+        </div>
+        
+        <div class="vs-area">
+            <div class="player">
+                <div id="player-choice">
+                    <img class="choice-image" id="player-choice-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13.5v7l6-3.5z'/%3E%3C/svg%3E" alt="?">
+                </div>
+                <div>玩家</div>
+            </div>
+            
+            <div class="vs-text">VS</div>
+            
+            <div class="computer">
+                <div id="computer-choice">
+                    <img class="choice-image" id="computer-choice-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13.5v7l6-3.5z'/%3E%3C/svg%3E" alt="?">
+                </div>
+                <div>电脑</div>
+            </div>
+        </div>
+        
+        <div class="result" id="result">
+            等待你的选择...
+        </div>
+        
+        <div class="history">
+            <h2>对战历史</h2>
+            <div class="history-list" id="history-list">
+                <!-- 历史记录将在这里显示 -->
+            </div>
+        </div>
+        
+        <div class="victory-message" id="victory-message"></div>
+        
+        <footer>
+            <p>游戏设计 | 剪刀石头布变体 | 请选择角色开始游戏</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 角色数据
+        const characters = {
+            jiunwai: {
+                name: "Jiunwai",
+                image: "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                beats: "gwen"
+            },
+            jenson: {
+                name: "Jenson",
+                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                beats: "jiunwai"
+            },
+            gwen: {
+                name: "Gwen",
+                image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                beats: "jenson"
+            }
+        };
+        
+        // 胜负消息
+        const winMessages = {
+            jiunwai_gwen: "俊伟成功压扁gwen",
+            gwen_jenson: "gwen成功魅惑jenson",
+            jenson_jiunwai: "Jenson成功扫一巴俊伟"
+        };
+        
+        const drawMessage = "这把不算 因为俊伟很肥";
+        
+        // DOM元素
+        const playerChoiceImg = document.getElementById('player-choice-img');
+        const computerChoiceImg = document.getElementById('computer-choice-img');
+        const resultEl = document.getElementById('result');
+        const historyListEl = document.getElementById('history-list');
+        const victoryMessageEl = document.getElementById('victory-message');
+        
+        // 游戏状态
+        let gameHistory = [];
+        
+        // 按钮事件监听
+        document.getElementById('jiunwai-btn').addEventListener('click', () => playGame('jiunwai'));
+        document.getElementById('jenson-btn').addEventListener('click', () => playGame('jenson'));
+        document.getElementById('gwen-btn').addEventListener('click', () => playGame('gwen'));
+        
+        // 游戏主逻辑
+        function playGame(playerChoice) {
+            // 玩家选择
+            const player = characters[playerChoice];
+            playerChoiceImg.src = player.image;
+            playerChoiceImg.classList.add('pulse');
+            
+            // 电脑随机选择
+            const choices = Object.keys(characters);
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+            const computer = characters[computerChoice];
+            computerChoiceImg.src = computer.image;
+            computerChoiceImg.classList.add('pulse');
+            
+            // 移除动画类
+            setTimeout(() => {
+                playerChoiceImg.classList.remove('pulse');
+                computerChoiceImg.classList.remove('pulse');
+            }, 500);
+            
+            // 判断胜负
+            let result;
+            let resultClass;
+            let resultText;
+            
+            if (playerChoice === computerChoice) {
+                // 平局
+                result = "draw";
+                resultClass = "draw";
+                resultText = drawMessage;
+                showVictoryMessage(resultText);
+            } else if (player.beats === computerChoice) {
+                // 玩家胜利
+                result = "win";
+                resultClass = "win";
+                resultText = winMessages[`${playerChoice}_${computerChoice}`];
+                showVictoryMessage(resultText);
+            } else {
+                // 电脑胜利
+                result = "lose";
+                resultClass = "lose";
+                resultText = winMessages[`${computerChoice}_${playerChoice}`];
+                showVictoryMessage(resultText);
+            }
+            
+            // 显示结果
+            resultEl.textContent = resultText;
+            resultEl.className = "result " + resultClass;
+            resultEl.classList.add('bounce');
+            
+            setTimeout(() => {
+                resultEl.classList.remove('bounce');
+            }, 600);
+            
+            // 添加到历史记录
+            addToHistory(player, computer, result);
+        }
+        
+        // 显示胜利消息动画
+        function showVictoryMessage(message) {
+            victoryMessageEl.textContent = message;
+            victoryMessageEl.classList.add('show-message', 'flash');
+            
+            setTimeout(() => {
+                victoryMessageEl.classList.remove('show-message', 'flash');
+            }, 2000);
+        }
+        
+        // 添加历史记录
+        function addToHistory(player, computer, result) {
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            
+            let resultText;
+            let resultClass;
+            
+            if (result === "win") {
+                resultText = "胜利";
+                resultClass = "win-text";
+            } else if (result === "lose") {
+                resultText = "失败";
+                resultClass = "lose-text";
+            } else {
+                resultText = "平局";
+                resultClass = "draw-text";
+            }
+            
+            historyItem.innerHTML = `
+                <span><img src="${player.image}" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:5px;"> ${player.name}</span> 
+                vs 
+                <span><img src="${computer.image}" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:5px;"> ${computer.name}</span> → 
+                <span class="${resultClass}">${resultText}</span>
+            `;
+            
+            historyListEl.insertBefore(historyItem, historyListEl.firstChild);
+            
+            // 保存游戏记录
+            gameHistory.push({
+                player: player.name,
+                computer: computer.name,
+                result: result
+            });
+        }
+    </script>
+</body>
+</html>
